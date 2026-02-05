@@ -41,6 +41,7 @@ class GameBoard {
         this.grid[position].classList.remove(...className);
     }
 
+    //function to check if a className exists at a position on the grid
     objectExists = (position, object) => {
         return this.grid[position].classList.contains(object);
     }

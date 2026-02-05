@@ -51,7 +51,7 @@ class Pacman {
 
         const nextMovePosition = this.position + direction.movement;
 
-        if(objectExists(nextMovePosition, OBJECT_TYPES.WALL)) return;
+        if(objectExists(nextMovePosition, OBJECT_TYPES.WALL) || objectExists(nextMovePosition, OBJECT_TYPES.GHOST_LAIR)) return;
         
         this.direction = direction;
     }
