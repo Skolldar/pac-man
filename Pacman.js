@@ -1,23 +1,11 @@
 import { DIRECTIONS, OBJECT_TYPES } from "./setup.js";
+import Character from "./Character.js";
 
-class Pacman {
+class Pacman extends Character {
     constructor(speed, position) {
-        this.position = position;
-        this.speed = speed;
-        this.direction = null;
-        this.timer = 0;
+        super(speed, position); //super() calls the constructor of the parent class (Character) and passes the speed and position arguments to it
         this.powerPillActive = false;
         this.rotation = true;
-    }
-
-    shouldMove() {
-        if(!this.direction) return false;
-
-        if(this.timer === this.speed) {
-            this.timer = 0;
-            return true;
-        }
-        this.timer++;
     }
 
     getNextMove(objectExists) {
@@ -35,10 +23,6 @@ class Pacman {
         const classesToAdd = [OBJECT_TYPES.PACMAN];
 
         return {classesToRemove, classesToAdd};
-    }
-
-    setNewPosition(nextMovePosition) {
-        this.position = nextMovePosition;
     }
 
     hanldeKeyInput(e, objectExists) {
