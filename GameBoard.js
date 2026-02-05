@@ -41,13 +41,33 @@ class GameBoard {
         this.grid[position].classList.remove(...className);
     }
 
-    objectExists(position, object) {
-        return this.grid[position].classList.contains(...object);
+    objectExists = (position, object) => {
+        return this.grid[position].classList.contains(object);
     }
 
     //rotate the pacman div to face the direction of movement
     rotateDiv(position, rotation) {
         this.grid[position].style.transform = `rotate(${rotation}deg)`;
+    }
+
+    moveCharacter(character) {
+        if(character.shouldMove()) {
+            const {nextMovePosition, direction} = character.getNextMove(this.objectExists);
+            const {classesToRemove, classesToAdd} = character.makeMove();
+            
+            //rotate the character if it has a rotation property and is moving to a new position
+            if(character.rotation && nextMovePosition !== character.position) {
+                this.rotateDiv(nextMovePosition, character.direction.rotation);
+                this.rotateDiv(character.position, 0);
+            }
+            
+            //remove the character from the old position on the grid
+            this.removeObject(character.position, classesToRemove);
+            //add the character to the new position on the grid
+            this.addObject(nextMovePosition, classesToAdd);
+            //set new position for the character
+            character.setNewPosition(nextMovePosition);
+        }
     }
 
     //static method to create a new game board and populate it with the level layout
