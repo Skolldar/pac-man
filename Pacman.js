@@ -1,4 +1,4 @@
-import { DIRECTIONS, OBJECT_TYPES } from "./setup.js";
+import { DIRECTIONS, OBJECT_TYPE } from "./setup.js";
 import Character from "./Character.js";
 
 class Pacman extends Character {
@@ -11,7 +11,7 @@ class Pacman extends Character {
     getNextMove(objectExists) {
         let nextMovePosition = this.position + this.direction.movement;
 
-        if(objectExists(nextMovePosition, OBJECT_TYPES.WALL) || objectExists(nextMovePosition, OBJECT_TYPES.GHOST_LAIR)) {
+        if(objectExists(nextMovePosition, OBJECT_TYPE.WALL) || objectExists(nextMovePosition, OBJECT_TYPE.GHOSTLAIR)) {
             nextMovePosition = this.position;
         }
 
@@ -19,13 +19,13 @@ class Pacman extends Character {
     }
 
     makeMove() {
-        const classesToRemove = [OBJECT_TYPES.PACMAN];
-        const classesToAdd = [OBJECT_TYPES.PACMAN];
+        const classesToRemove = [OBJECT_TYPE.PACMAN];
+        const classesToAdd = [OBJECT_TYPE.PACMAN];
 
         return {classesToRemove, classesToAdd};
     }
 
-    hanldeKeyInput(e, objectExists) {
+    handleKeyInput(e, objectExists) {
         let direction;
         if(e.keyCode >= 37 && e.keyCode <= 40) {
             direction = DIRECTIONS[e.key];
@@ -35,7 +35,7 @@ class Pacman extends Character {
 
         const nextMovePosition = this.position + direction.movement;
 
-        if(objectExists(nextMovePosition, OBJECT_TYPES.WALL) || objectExists(nextMovePosition, OBJECT_TYPES.GHOST_LAIR)) return;
+        if(objectExists(nextMovePosition, OBJECT_TYPE.WALL) || objectExists(nextMovePosition, OBJECT_TYPE.GHOSTLAIR)) return;
         
         this.direction = direction;
     }

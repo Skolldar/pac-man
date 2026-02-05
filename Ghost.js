@@ -1,40 +1,50 @@
-import { DIRECTIONS, OBJECT_TYPES } from "./setup.js";
-import Character from "./Character.js";
+import { DIRECTIONS, OBJECT_TYPE } from './setup.js';
+import { randomMove } from './ghostmove.js';
 
-class Ghost extends Character {
-    constructor(speed, startPosition, movement, name) {
-        super(speed, startPosition);
-        this.name = name;
-        this.startPosition = startPosition;
-        this.movement = movement;
-        this.direction = DIRECTIONS.ArrowRight;
-        this.isScared = false;
+class Ghost {
+  constructor(speed = 5, startPos, movement, name) {
+    this.name = name;
+    this.movement = movement;
+    this.startPos = startPos;
+    this.pos = startPos;
+    this.dir = DIRECTIONS.ArrowRight;
+    this.speed = speed;
+    this.timer = 0;
+    this.isScared = false;
+    this.rotation = false;
+  }
+
+  shouldMove() {
+    if (this.timer === this.speed) {
+      this.timer = 0;
+      return true;
     }
+    this.timer++;
+  }
 
-    shouldMove() {
-        if (this.timer === this.speed) {
-            this.timer = 0;
-            return true;
-        }
-        this.timer++;
-        return false;
-    }
+  getNextMove(objectExist) {
+    // Call move algoritm here
+    const { nextMovePos, direction } = this.movement(
+      this.pos,
+      this.dir,
+      objectExist
+    );
+    return { nextMovePos, direction };
+  }
 
-    getNextMove(objectExists) {
-        const {nextMovePosition, direction} = this.movement(this.position, this.direction, objectExists);
+  makeMove() {
+    const classesToRemove = [OBJECT_TYPE.GHOST, OBJECT_TYPE.SCARED, this.name];
+    let classesToAdd = [OBJECT_TYPE.GHOST, this.name];
 
-        return {nextMovePosition, direction};
-    }
+    if (this.isScared) classesToAdd = [...classesToAdd, OBJECT_TYPE.SCARED];
 
-    makeMove() {
-        const classesToRemove = [OBJECT_TYPES.GHOST, `${OBJECT_TYPES.SCARED_GHOST}-${this.name}`];
-        const classesToAdd = [OBJECT_TYPES.GHOST, `${OBJECT_TYPES.GHOST}-${this.name}`];
-        
-        if(this.isScared) {
-            classesToAdd.push(OBJECT_TYPES.SCARED_GHOST);
-        }
+    return { classesToRemove, classesToAdd };
+  }
 
-    }
+  setNewPos(nextMovePos, direction) {
+    this.pos = nextMovePos;
+    this.dir = direction;
+  }
 }
 
 export default Ghost;

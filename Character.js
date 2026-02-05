@@ -1,4 +1,3 @@
-import { DIRECTIONS } from "./setup.js";
 
 class Character {
     constructor(speed, position) {
@@ -20,8 +19,16 @@ class Character {
         return false;
     }
 
-    setNewPosition(nextMovePosition) {
+    getNextMove(objectExists) {
+        if (!this.direction) return { nextMovePosition: this.position, direction: this.direction };
+
+        const nextMovePosition = this.position + this.direction.movement;
+        return { nextMovePosition, direction: this.direction };
+    }
+
+    setNewPosition(nextMovePosition, direction = null) {
         this.position = nextMovePosition;
+        if (direction) this.direction = direction;
     }
 }
 

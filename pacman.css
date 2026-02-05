@@ -118,6 +118,10 @@ body {
   border-radius: 50%;
 }
 
+.ghost_lair {
+  background: black;
+}
+
 .ghost {
   position: relative;
   border-radius: 10px 10px 2px 2px;
