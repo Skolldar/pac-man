@@ -1,17 +1,32 @@
 import { DIRECTIONS, OBJECT_TYPE } from "./setup.js";
-import Character from "./Character.js";
 
-class Pacman extends Character {
-    constructor(speed, position) {
-        super(speed, position); //super() calls the constructor of the parent class (Character) and passes the speed and position arguments to it
+class Pacman {
+    constructor(speed, startPosition) {
+        this.position = startPosition;
+        this.speed = speed;
+        this.direction = null;
+        this.timer = 0;
         this.powerPillActive = false;
         this.rotation = true;
+    }
+
+    shouldMove() {
+        if (!this.direction) return false;
+
+        if (this.timer === this.speed) {
+            this.timer = 0;
+            return true;
+        }
+        this.timer++;
+        return false;
     }
 
     getNextMove(objectExists) {
         let nextMovePosition = this.position + this.direction.movement;
 
-        if(objectExists(nextMovePosition, OBJECT_TYPE.WALL) || objectExists(nextMovePosition, OBJECT_TYPE.GHOSTLAIR)) {
+        // Check for wall collisions; allow entering ghost lair
+        if(
+            objectExists(nextMovePosition, OBJECT_TYPE.WALL)) {
             nextMovePosition = this.position;
         }
 
@@ -25,6 +40,10 @@ class Pacman extends Character {
         return {classesToRemove, classesToAdd};
     }
 
+    setNewPosition(nextMovePosition) {
+        this.position = nextMovePosition;
+    }
+
     handleKeyInput(e, objectExists) {
         let direction;
         if(e.keyCode >= 37 && e.keyCode <= 40) {
@@ -35,7 +54,7 @@ class Pacman extends Character {
 
         const nextMovePosition = this.position + direction.movement;
 
-        if(objectExists(nextMovePosition, OBJECT_TYPE.WALL) || objectExists(nextMovePosition, OBJECT_TYPE.GHOSTLAIR)) return;
+        if(objectExists(nextMovePosition, OBJECT_TYPE.WALL)) return;
         
         this.direction = direction;
     }
