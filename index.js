@@ -50,7 +50,7 @@ function checkCollision(pacman, ghosts) {
                 OBJECT_TYPE.SCARED,
                 collisionGhost.name
             ]);
-            collisionGhost.position = collisionGhost.startPos;
+            collisionGhost.position = collisionGhost.startPosition;
             score += 100;
         } else {
             gameBoard.removeObject(pacman.position, [OBJECT_TYPE.PACMAN]);

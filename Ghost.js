@@ -2,12 +2,12 @@ import { DIRECTIONS, OBJECT_TYPE } from './setup.js';
 import { randomMove } from './ghostmove.js';
 
 class Ghost {
-  constructor(speed = 5, startPos, movement, name) {
+  constructor(speed = 5, startPosition, movement, name) {
     this.name = name;
     this.movement = movement;
-    this.startPos = startPos;
-    this.pos = startPos;
-    this.dir = DIRECTIONS.ArrowRight;
+    this.startPosition = startPosition;
+    this.position = startPosition;
+    this.direction = DIRECTIONS.ArrowRight;
     this.speed = speed;
     this.timer = 0;
     this.isScared = false;
@@ -24,12 +24,12 @@ class Ghost {
 
   getNextMove(objectExist) {
     // Call move algoritm here
-    const { nextMovePos, direction } = this.movement(
-      this.pos,
-      this.dir,
+    const { nextMovePosition, direction } = this.movement(
+      this.position,
+      this.direction,
       objectExist
     );
-    return { nextMovePos, direction };
+    return { nextMovePosition, direction };
   }
 
   makeMove() {
@@ -41,9 +41,9 @@ class Ghost {
     return { classesToRemove, classesToAdd };
   }
 
-  setNewPos(nextMovePos, direction) {
-    this.pos = nextMovePos;
-    this.dir = direction;
+  setNewPosition(nextMovePosition, direction) {
+    this.position = nextMovePosition;
+    this.direction = direction;
   }
 }
 

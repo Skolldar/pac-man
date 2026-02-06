@@ -34,69 +34,44 @@ class GameBoard {
     });
   }
 
-  addObject(pos, classes) {
-    if (!this.grid[pos]) return;
-    this.grid[pos].classList.add(...classes);
+  addObject(position, classes) {
+    if (!this.grid[position]) return;
+    this.grid[position].classList.add(...classes);
   }
 
-  removeObject(pos, classes) {
-    if (!this.grid[pos]) return;
-    this.grid[pos].classList.remove(...classes);
+  removeObject(position, classes) {
+    if (!this.grid[position]) return;
+    this.grid[position].classList.remove(...classes);
   }
   // Can have an arrow function here cause of this binding
-  objectExist(pos, object) {
-    if (!this.grid[pos]) return false;
-    return this.grid[pos].classList.contains(object);
+  objectExist(position, object) {
+    if (!this.grid[position]) return false;
+    return this.grid[position].classList.contains(object);
   };
 
-  rotateDiv(pos, deg) {
-    if (!this.grid[pos]) return;
-    this.grid[pos].style.transform = `rotate(${deg}deg)`;
+  rotateDiv(position, deg) {
+    if (!this.grid[position]) return;
+    this.grid[position].style.transform = `rotate(${deg}deg)`;
   }
 
   moveCharacter(character) {
-    if (!character.shouldMove || !character.shouldMove()) return;
+    if (character.shouldMove()) {
+      const { nextMovePosition, direction } = character.getNextMove(
+        this.objectExist.bind(this)
+      );
+      const { classesToRemove, classesToAdd } = character.makeMove();
 
-    // Get move result
-    const moveResult = character.getNextMove
-      ? character.getNextMove(this.objectExist.bind(this))
-      : {};
-    const nextMove = 'nextMovePosition' in moveResult ? moveResult.nextMovePosition : moveResult.nextMovePos;
-    const direction = moveResult.direction ?? moveResult.dir;
+      if (character.rotation && nextMovePosition !== character.pos) {
+        // Rotate
+        this.rotateDiv(nextMovePosition, character.direction.rotation);
+        // Rotate the previous div back
+        this.rotateDiv(character.position, 0);
+      }
 
-    if (typeof nextMove === 'undefined') return;
+      this.removeObject(character.position, classesToRemove);
+      this.addObject(nextMovePosition, classesToAdd);
 
-    const { classesToRemove = [], classesToAdd = [] } = typeof character.makeMove === 'function'
-      ? character.makeMove()
-      : { classesToRemove: [], classesToAdd: [] };
-
-    const currentPos = typeof character.position !== 'undefined' ? character.position : character.pos;
-
-    if (character.rotation && nextMove !== currentPos) {
-      const rotationDeg = (character.direction ?? character.dir)?.rotation ?? 0;
-      this.rotateDiv(nextMove, rotationDeg);
-      this.rotateDiv(currentPos, 0);
-    }
-
-    this.removeObject(currentPos, classesToRemove);
-    this.addObject(nextMove, classesToAdd);
-
-    if (typeof character.setNewPosition === 'function') {
-      character.setNewPosition(nextMove, direction);
-      return;
-    }
-
-    if (typeof character.setNewPos === 'function') {
-      character.setNewPos(nextMove, direction);
-      return;
-    }
-
-    if (typeof character.position !== 'undefined') character.position = nextMove;
-    else character.pos = nextMove;
-
-    if (direction) {
-      if (typeof character.direction !== 'undefined') character.direction = direction;
-      else character.dir = direction;
+      character.setNewPosition(nextMovePosition, direction);
     }
   }
 
