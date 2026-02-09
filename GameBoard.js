@@ -3,6 +3,7 @@ import { GRID_SIZE, CELL_SIZE, OBJECT_TYPE, CLASS_LIST } from './setup.js';
 class GameBoard {
   constructor(DOMGrid) {
     this.dotCount = 0;
+    this.dotPositions = new Set();
     this.grid = [];
     this.DOMGrid = DOMGrid;
   }
@@ -17,9 +18,9 @@ class GameBoard {
 
   createGrid(level) {
     this.dotCount = 0;
+    this.dotPositions = new Set();
     this.grid = [];
     this.DOMGrid.innerHTML = '';
-    // First set correct amount of columns based on Grid Size and Cell Size
     this.DOMGrid.style.cssText = `grid-template-columns: repeat(${GRID_SIZE}, ${CELL_SIZE}px);`;
 
     level.forEach((square) => {
@@ -30,7 +31,11 @@ class GameBoard {
       this.grid.push(div);
 
       // Add dots
-      if (CLASS_LIST[square] === OBJECT_TYPE.DOT) this.dotCount++;
+      if (CLASS_LIST[square] === OBJECT_TYPE.DOT) {
+        this.dotCount++;
+        // Store the position of the dot for cherry placement
+        this.dotPositions.add(this.grid.length - 1);
+      }
     });
   }
 

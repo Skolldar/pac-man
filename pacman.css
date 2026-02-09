@@ -96,6 +96,7 @@ body {
 
 .square {
   display: block;
+  position: relative;
 }
 
 .blank {
@@ -174,6 +175,12 @@ body {
   background: orange;
 }
 
+.cherry {
+  background-image: url('./img/cherry.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
 .pacman {
   background: yellow;
   border: none;

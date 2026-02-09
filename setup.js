@@ -35,7 +35,8 @@ export const OBJECT_TYPE = {
   PACMAN: 'pacman',
   GHOST: 'ghost',
   SCARED: 'scared',
-  GHOSTLAIR: 'lair'
+  GHOSTLAIR: 'lair',
+  CHERRY: 'cherry'
 };
 
 // Lookup array for classes
@@ -49,7 +50,8 @@ export const CLASS_LIST = [
   OBJECT_TYPE.CLYDE,
   OBJECT_TYPE.PILL,
   OBJECT_TYPE.PACMAN,
-  OBJECT_TYPE.GHOSTLAIR
+  OBJECT_TYPE.GHOSTLAIR,
+  OBJECT_TYPE.CHERRY
 ];
 
 // prettier-ignore
