@@ -21,7 +21,7 @@ let score = 0;
 let timer = null;
 let gameWin = false;
 let powerPillActive = false;
-let powerPillTimer = null;
+let powerPillEndTime = 0;
 let ghosts = [];
 
 //Game over function
@@ -44,13 +44,14 @@ function checkCollision(pacman, ghosts) {
     const collisionGhost = ghosts.find((ghost) => pacman.position === ghost.position);
 
     if (collisionGhost) {
-        if(pacman.powerPillActive) {
+        if (pacman.powerPillActive && collisionGhost.isScared) {
             gameBoard.removeObject(collisionGhost.position, [
                 OBJECT_TYPE.GHOST,
                 OBJECT_TYPE.SCARED,
                 collisionGhost.name
             ]);
             collisionGhost.position = collisionGhost.startPosition;
+            collisionGhost.isScared = false; // Ghost returns to base in normal state
             score += 100;
         } else {
             gameBoard.removeObject(pacman.position, [OBJECT_TYPE.PACMAN]);
@@ -68,6 +69,41 @@ function gameLoop(pacman, ghosts) {
     //move ghosts
     ghosts.forEach((ghost) => gameBoard.moveCharacter(ghost));
     checkCollision(pacman, ghosts);
+
+    //check if pacman eats a dot
+    if (gameBoard.objectExist(pacman.position, OBJECT_TYPE.DOT)) {
+        gameBoard.removeObject(pacman.position, [OBJECT_TYPE.DOT]);
+        gameBoard.dotCount--;
+        score += 10;
+    }
+
+    //check if pacman eats a power pill
+    if (gameBoard.objectExist(pacman.position, OBJECT_TYPE.PILL)) {
+        gameBoard.removeObject(pacman.position, [OBJECT_TYPE.PILL]);
+        pacman.powerPillActive = true;
+        powerPillActive = true;
+        powerPillEndTime = Date.now() + POWER_PILL_DURATION;
+        score += 50;
+        ghosts.forEach((ghost) => (ghost.isScared = true));
+    }
+
+    // Power pill timer logic
+    if (pacman.powerPillActive) {
+        if (Date.now() >= powerPillEndTime) {
+            pacman.powerPillActive = false;
+            powerPillActive = false;
+            ghosts.forEach((ghost) => (ghost.isScared = false));
+        }
+    }
+
+    //check if all dots are eaten
+    if (gameBoard.dotCount === 0) {
+        gameWin = true;
+        gameOver(pacman, ghosts);
+    }
+
+    //Show the score
+    scoreTable.textContent = `Score: ${score}`;
 }
 
 function startGame() {
