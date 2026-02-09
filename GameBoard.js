@@ -8,6 +8,18 @@ class GameBoard {
     this.DOMGrid = DOMGrid;
   }
 
+  static getNextPositionWithPortal(position, direction) {
+    let nextMovePosition = position + direction.movement;
+
+    if (direction.movement === -1 && position % GRID_SIZE === 0) {
+      nextMovePosition = position + (GRID_SIZE - 1);
+    } else if (direction.movement === 1 && position % GRID_SIZE === GRID_SIZE - 1) {
+      nextMovePosition = position - (GRID_SIZE - 1);
+    }
+
+    return nextMovePosition;
+  }
+
   showGameStatus(gameWin) {
     // Create and show game win or game over
     const div = document.createElement('div');

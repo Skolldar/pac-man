@@ -1,9 +1,10 @@
 import { DIRECTIONS, OBJECT_TYPE } from './setup.js';
+import GameBoard from './GameBoard.js';
 
 // Primitive random movement.
 export function randomMove(position, direction, objectExist) {
   let dir = direction;
-  let nextMovePosition = position + dir.movement;
+  let nextMovePosition = GameBoard.getNextPositionWithPortal(position, dir);
   // Create an array from the diretions objects keys
   const keys = Object.keys(DIRECTIONS);
 
@@ -16,7 +17,7 @@ export function randomMove(position, direction, objectExist) {
     // Set the new direction
     dir = DIRECTIONS[key];
     // Set the next move
-    nextMovePosition = position + dir.movement;
+    nextMovePosition = GameBoard.getNextPositionWithPortal(position, dir);
   }
 
   return { nextMovePosition, direction: dir };

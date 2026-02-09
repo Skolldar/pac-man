@@ -1,4 +1,5 @@
 import { DIRECTIONS, OBJECT_TYPE } from "./setup.js";
+import GameBoard from "./GameBoard.js";
 
 class Pacman {
     constructor(speed, startPosition) {
@@ -22,7 +23,7 @@ class Pacman {
     }
 
     getNextMove(objectExists) {
-        let nextMovePosition = this.position + this.direction.movement;
+        let nextMovePosition = GameBoard.getNextPositionWithPortal(this.position, this.direction);
 
         // Check for wall collisions; allow entering ghost lair
         if(
@@ -52,7 +53,7 @@ class Pacman {
             return;
         }
 
-        const nextMovePosition = this.position + direction.movement;
+        const nextMovePosition = GameBoard.getNextPositionWithPortal(this.position, direction);
 
         if(objectExists(nextMovePosition, OBJECT_TYPE.WALL)) return;
         
