@@ -75,6 +75,7 @@ function gameLoop(pacman, ghosts) {
         gameBoard.removeObject(pacman.position, [OBJECT_TYPE.DOT]);
         gameBoard.dotCount--;
         score += 10;
+        scoreTable.textContent = `Score: ${score}`;
     }
 
     //check if pacman eats a power pill
@@ -101,35 +102,32 @@ function gameLoop(pacman, ghosts) {
         gameWin = true;
         gameOver(pacman, ghosts);
     }
-
-    //Show the score
-    scoreTable.textContent = `Score: ${score}`;
 }
 
 function startGame() {
-  gameWin = false;
-  powerPillActive = false;
-  score = 0;
+    gameWin = false;
+    powerPillActive = false;
+    score = 0;
+    // Show score as 0 at the start
+    scoreTable.textContent = 'Score: 0';
+    startButton.classList.add('hide');
+    gameBoard.createGrid(LEVEL);
 
-  startButton.classList.add('hide');
+    const pacman = new Pacman(2, 287);
+    gameBoard.addObject(287, [OBJECT_TYPE.PACMAN]);
+    document.addEventListener('keydown', (e) =>
+      pacman.handleKeyInput(e, gameBoard.objectExist.bind(gameBoard))
+    );
 
-  gameBoard.createGrid(LEVEL);
+    const ghosts = [
+      new Ghost(5, 188, randomMove, OBJECT_TYPE.BLINKY),
+      new Ghost(4, 209, randomMove, OBJECT_TYPE.PINKY),
+      new Ghost(3, 230, randomMove, OBJECT_TYPE.INKY),
+      new Ghost(2, 251, randomMove, OBJECT_TYPE.CLYDE)
+    ];
 
-  const pacman = new Pacman(2, 287);
-  gameBoard.addObject(287, [OBJECT_TYPE.PACMAN]);
-  document.addEventListener('keydown', (e) =>
-    pacman.handleKeyInput(e, gameBoard.objectExist.bind(gameBoard))
-  );
-
-  const ghosts = [
-    new Ghost(5, 188, randomMove, OBJECT_TYPE.BLINKY),
-    new Ghost(4, 209, randomMove, OBJECT_TYPE.PINKY),
-    new Ghost(3, 230, randomMove, OBJECT_TYPE.INKY),
-    new Ghost(2, 251, randomMove, OBJECT_TYPE.CLYDE)
-  ];
-
-  // Gameloop
-  timer = setInterval(() => gameLoop(pacman, ghosts), GLOBAL_SPEED);
+    // Gameloop
+    timer = setInterval(() => gameLoop(pacman, ghosts), GLOBAL_SPEED);
 }
 
 // Initialize game
