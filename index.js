@@ -41,11 +41,11 @@ function playSound(sound) {
     if (sound instanceof HTMLAudioElement) {
         const soundEffect = sound.cloneNode(true);
         soundEffect.currentTime = 0;
-        soundEffect.play().catch(() => {});
+        soundEffect.play().catch((error) => {console.error('Error playing sound:', error)});
         return;
     }
     const soundEffect = new Audio(sound);
-    soundEffect.play().catch(() => {});
+    soundEffect.play().catch((error) => {console.error('Error playing sound:', error)});
 }
 
 //Game over function
@@ -79,11 +79,11 @@ function checkCollision(pacman, ghosts) {
                 collisionGhost.name
             ]);
             collisionGhost.position = collisionGhost.startPosition;
-            collisionGhost.isScared = false; // Ghost returns to base in normal state
+            collisionGhost.isScared = false;
             score += 100;
         } else {
             gameBoard.removeObject(pacman.position, [OBJECT_TYPE.PACMAN]);
-            gameBoard.rotateDiv(pacman.position, 0); //reset rotation
+            gameBoard.rotateDiv(pacman.position, 0);
             gameOver(pacman, gameGrid);
         }
     }
@@ -110,6 +110,7 @@ function gameLoop(pacman, ghosts) {
     if (gameBoard.objectExist(pacman.position, OBJECT_TYPE.PILL)) {
         playSound(powerPillSound);
         gameBoard.removeObject(pacman.position, [OBJECT_TYPE.PILL]);
+        gameBoard.dotCount--;
         pacman.powerPillActive = true;
         powerPillActive = true;
         powerPillEndTime = Date.now() + POWER_PILL_DURATION;
@@ -174,7 +175,7 @@ function startGame() {
         // Cherry appearance interval
         cherryInterval = setInterval(() => {
                 cherry.showCherry(gameBoard);
-        }, 20000); // Cherry appears every 20 seconds
+        }, 20000);
         // Start random movement for cherry
         cherry.startRandomMovement(gameBoard);
 

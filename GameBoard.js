@@ -30,11 +30,14 @@ class GameBoard {
       this.DOMGrid.appendChild(div);
       this.grid.push(div);
 
-      // Add dots
+      // Add dots and pills
       if (CLASS_LIST[square] === OBJECT_TYPE.DOT) {
         this.dotCount++;
         // Store the position of the dot for cherry placement
         this.dotPositions.add(this.grid.length - 1);
+      }
+      if (CLASS_LIST[square] === OBJECT_TYPE.PILL) {
+        this.dotCount++;
       }
     });
   }
