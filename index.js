@@ -40,11 +40,12 @@ function playSound(sound) {
     if (!sound) return;
     if (sound instanceof HTMLAudioElement) {
         const soundEffect = sound.cloneNode(true);
-        soundEffect.play();
+        soundEffect.currentTime = 0;
+        soundEffect.play().catch(() => {});
         return;
     }
     const soundEffect = new Audio(sound);
-    soundEffect.play();
+    soundEffect.play().catch(() => {});
 }
 
 //Game over function
