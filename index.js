@@ -6,6 +6,14 @@ import Pacman from "./Pacman.js";
 import Ghost from "./Ghost.js";
 import Cherry from "./Cherry.js";
 
+const munchSound = new Audio("./sounds/munch.wav");
+const powerPillSound = new Audio("./sounds/pill.wav");
+const eatGhostSound = new Audio("./sounds/eat_ghost.wav");
+const gameOverSound = new Audio("./sounds/death.wav");
+const winSound = new Audio("./sounds/game_start.wav");
+const cherrySound = new Audio("./sounds/eat_cherry.mp3");
+const gameStartSound = new Audio("./sounds/game_start.wav");
+
 //DOM elements
 const gameGrid = document.querySelector('#game');
 const scoreTable = document.querySelector('#score');
@@ -27,8 +35,21 @@ let ghosts = [];
 let cherry = new Cherry();
 let cherryInterval = null;
 
+//audio
+function playSound(sound) {
+    if (!sound) return;
+    if (sound instanceof HTMLAudioElement) {
+        const soundEffect = sound.cloneNode(true);
+        soundEffect.play();
+        return;
+    }
+    const soundEffect = new Audio(sound);
+    soundEffect.play();
+}
+
 //Game over function
 function gameOver(pacman, grid) {
+    playSound(gameWin ? winSound : gameOverSound);
     //remove the event listener to prevent further movement
     document.removeEventListener('keydown', (e) =>
         pacman.handleKeyInput(e, gameBoard.objectExist.bind(gameBoard))
@@ -50,6 +71,7 @@ function checkCollision(pacman, ghosts) {
 
     if (collisionGhost) {
         if (pacman.powerPillActive && collisionGhost.isScared) {
+                playSound(eatGhostSound);
             gameBoard.removeObject(collisionGhost.position, [
                 OBJECT_TYPE.GHOST,
                 OBJECT_TYPE.SCARED,
@@ -77,6 +99,7 @@ function gameLoop(pacman, ghosts) {
 
     //check if pacman eats a dot
     if (gameBoard.objectExist(pacman.position, OBJECT_TYPE.DOT)) {
+        playSound(munchSound);
         gameBoard.removeObject(pacman.position, [OBJECT_TYPE.DOT]);
         gameBoard.dotCount--;
         score += 10;
@@ -84,6 +107,7 @@ function gameLoop(pacman, ghosts) {
 
     //check if pacman eats a power pill
     if (gameBoard.objectExist(pacman.position, OBJECT_TYPE.PILL)) {
+        playSound(powerPillSound);
         gameBoard.removeObject(pacman.position, [OBJECT_TYPE.PILL]);
         pacman.powerPillActive = true;
         powerPillActive = true;
@@ -103,6 +127,7 @@ function gameLoop(pacman, ghosts) {
 
     //check if pacman eats a cherry
     if (gameBoard.objectExist(pacman.position, OBJECT_TYPE.CHERRY)) {
+        playSound(cherrySound);
         gameBoard.removeObject(pacman.position, [OBJECT_TYPE.CHERRY]);
         score += 70;
         cherry.isVisible = false;
@@ -123,6 +148,7 @@ function gameLoop(pacman, ghosts) {
 }
 
 function startGame() {
+        playSound(gameStartSound);
         gameWin = false;
         powerPillActive = false;
         score = 0;
