@@ -20,7 +20,7 @@ const scoreTable = document.querySelector('#score');
 const startButton = document.querySelector('#start-button');
 
 //Game constants
-const POWER_PILL_DURATION = 10000; //10 seconds
+const POWER_PILL_DURATION = 10000;
 const GLOBAL_SPEED = 80; //milliseconds between each movement of the ghosts
 const gameBoard = GameBoard.createGameBoard(gameGrid, LEVEL); //create the game board and populate it with the level layout
 
@@ -51,6 +51,7 @@ function playSound(sound) {
 //Game over function
 function gameOver(pacman, grid) {
     playSound(gameWin ? winSound : gameOverSound);
+
     //remove the event listener to prevent further movement
     document.removeEventListener('keydown', (e) =>
         pacman.handleKeyInput(e, gameBoard.objectExist.bind(gameBoard))
@@ -123,7 +124,10 @@ function gameLoop(pacman, ghosts) {
         if (Date.now() >= powerPillEndTime) {
             pacman.powerPillActive = false;
             powerPillActive = false;
-            ghosts.forEach((ghost) => (ghost.isScared = false));
+            ghosts.forEach((ghost) => {
+                ghost.isScared = false;
+                    gameBoard.moveCharacter(ghost);
+            });
         }
     }
 
