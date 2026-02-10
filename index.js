@@ -12,6 +12,7 @@ const eatGhostSound = new Audio("./sounds/eat_ghost.wav");
 const gameOverSound = new Audio("./sounds/death.wav");
 const winSound = new Audio("./sounds/game_start.wav");
 const cherrySound = new Audio("./sounds/eat_cherry.mp3");
+const itemSound = new Audio('./sounds/item.mp3');
 const gameStartSound = new Audio("./sounds/game_start.wav");
 
 //DOM elements
@@ -31,7 +32,6 @@ let timer = null;
 let gameWin = false;
 let powerPillActive = false;
 let powerPillEndTime = 0;
-let ghosts = [];
 let cherry = new Cherry();
 let cherryInterval = null;
 
@@ -178,10 +178,10 @@ function startGame() {
 
         // Cherry appearance interval
         cherryInterval = setInterval(() => {
-                cherry.showCherry(gameBoard);
+            cherry.showCherry(gameBoard, () => playSound(itemSound));
         }, 20000);
         // Start random movement for cherry
-        cherry.startRandomMovement(gameBoard);
+        cherry.startRandomMovement(gameBoard, () => playSound(itemSound));
 
         // Gameloop
         timer = setInterval(() => gameLoop(pacman, ghosts), GLOBAL_SPEED);
@@ -189,4 +189,3 @@ function startGame() {
 
 // Initialize game
 startButton.addEventListener('click', startGame);
-

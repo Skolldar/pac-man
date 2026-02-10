@@ -10,7 +10,7 @@ class Cherry {
         this.movementInterval = 20000;
     }
 
-    showCherry(gameBoard) {
+    showCherry(gameBoard, soundCallback) {
 
         if (this.isVisible) return;
         // Find all valid positions where dots were removed
@@ -34,6 +34,9 @@ class Cherry {
         this.position = randomPosition;
         this.isVisible = true;
         gameBoard.addObject(this.position, [OBJECT_TYPE.CHERRY]);
+        
+        // Play sound when cherry appears
+        if (soundCallback) soundCallback();
         // Set a timer to hide the cherry after the visible duration
         this.timer = setTimeout(() => {
             this.hideCherry(gameBoard);
@@ -55,11 +58,11 @@ class Cherry {
     }
 
     // Method to randomly move the cherry to a new position every 20 seconds
-    startRandomMovement(gameBoard) {
+    startRandomMovement(gameBoard, soundCallback) {
         setInterval(() => {
             if (this.isVisible) {
                 this.hideCherry(gameBoard);
-                this.showCherry(gameBoard);
+                this.showCherry(gameBoard, soundCallback);
             }
         }, this.movementInterval);
     }
