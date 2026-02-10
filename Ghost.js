@@ -1,5 +1,4 @@
 import { DIRECTIONS, OBJECT_TYPE } from './setup.js';
-import { randomMove } from './ghostmove.js';
 
 class Ghost {
   constructor(speed = 5, startPosition, movement, name) {
@@ -22,12 +21,12 @@ class Ghost {
     this.timer++;
   }
 
-  getNextMove(objectExist) {
-    // Call move algoritm here
+  getNextMove(objectExist, pacmanPosition) {
     const { nextMovePosition, direction } = this.movement(
       this.position,
       this.direction,
-      objectExist
+      objectExist,
+      pacmanPosition
     );
     return { nextMovePosition, direction };
   }

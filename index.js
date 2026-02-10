@@ -1,5 +1,5 @@
 import { LEVEL, OBJECT_TYPE } from "./setup.js";
-import { randomMove } from "./ghostmove.js";
+import { randomMove, chasePacmanSmart } from "./ghostmove.js";
 
 import GameBoard from "./GameBoard.js";
 import Pacman from "./Pacman.js";
@@ -14,6 +14,7 @@ const winSound = new Audio("./sounds/game_start.wav");
 const cherrySound = new Audio("./sounds/eat_cherry.mp3");
 const itemSound = new Audio('./sounds/item.mp3');
 const gameStartSound = new Audio("./sounds/game_start.wav");
+const dangerSound = new Audio("./sounds/danger.mp3");
 
 //DOM elements
 const gameGrid = document.querySelector('#game');
@@ -96,7 +97,7 @@ function gameLoop(pacman, ghosts) {
     gameBoard.moveCharacter(pacman);
 
     //move ghosts
-    ghosts.forEach((ghost) => gameBoard.moveCharacter(ghost));
+    ghosts.forEach((ghost) => gameBoard.moveCharacter(ghost, pacman.position));
     checkCollision(pacman, ghosts);
 
     //check if pacman eats a dot
@@ -126,7 +127,7 @@ function gameLoop(pacman, ghosts) {
             powerPillActive = false;
             ghosts.forEach((ghost) => {
                 ghost.isScared = false;
-                    gameBoard.moveCharacter(ghost);
+                    gameBoard.moveCharacter(ghost, pacman.position);
             });
         }
     }
@@ -175,7 +176,26 @@ function startGame() {
             new Ghost(3, 230, randomMove, OBJECT_TYPE.INKY),
             new Ghost(2, 251, randomMove, OBJECT_TYPE.CLYDE)
         ];
-
+        // when there are fewer than 10 dots left blinky chases; others stay random
+       ghosts.forEach((ghost) => {
+            if (ghost.name === OBJECT_TYPE.BLINKY) {
+                ghost.baseSpeed = ghost.speed;
+            }
+            ghost.movement = (position, direction, objectExist, pacmanPosition) => {
+                if (ghost.name !== OBJECT_TYPE.BLINKY) {
+                    return randomMove(position, direction, objectExist, pacmanPosition);
+                }
+                const shouldChase = gameBoard.dotCount < 10 && !ghost.isScared;
+                //set speed based on whether blinky should chase or not
+                ghost.speed = shouldChase ? 3 : ghost.baseSpeed;
+                playSound(shouldChase ? dangerSound : null);
+                return shouldChase
+                    ? chasePacmanSmart(position, direction, objectExist, pacmanPosition)
+                    : randomMove(position, direction, objectExist, pacmanPosition);
+            };
+            gameBoard.addObject(ghost.position, [OBJECT_TYPE.GHOST, ghost.name]);
+        });
+        
         // Cherry appearance interval
         cherryInterval = setInterval(() => {
             cherry.showCherry(gameBoard, () => playSound(itemSound));
