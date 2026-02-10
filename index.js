@@ -72,7 +72,7 @@ function checkCollision(pacman, ghosts) {
     const collisionGhost = ghosts.find((ghost) => pacman.position === ghost.position);
 
     if (collisionGhost) {
-        if (pacman.powerPillActive && collisionGhost.isScared) {
+        if (powerPillActive && collisionGhost.isScared) {
                 playSound(eatGhostSound);
             gameBoard.removeObject(collisionGhost.position, [
                 OBJECT_TYPE.GHOST,
