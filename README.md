@@ -33,10 +33,5 @@ A browser-based implementation of the classic Pac-Man game using JavaScript, HTM
 - Modern web browser (Chrome, Firefox, Edge, etc.)
 - No installation required
 
-## Credits
-- Game concept: Namco
-- Code: [Your Name]
-- Sounds and images: See `img/` and `sounds/` folders for attributions
-
 ## License
 This project is for educational purposes only.
