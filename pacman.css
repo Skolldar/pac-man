@@ -59,13 +59,52 @@ body {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 2rem;
 }
+.game-over {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: red;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 50px;
+  border: 3px solid red;
+  box-shadow: 0 0 0 5px red;
+  background: black;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 2rem;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.game-winner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: green;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 50px;
+  border: 3px solid green;
+  box-shadow: 0 0 0 5px green;
+  background: black;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 2rem;
+  z-index: 2;
+  pointer-events: none;
+}
 
 .pause {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: red;
+  color: yellow;
   display: flex;
   align-items: center;
   justify-content: center;

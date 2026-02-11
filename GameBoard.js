@@ -30,11 +30,17 @@ class GameBoard {
   }
 
   showGameStatus(gameWin) {
-    // Create and show game win or game over
-    const div = document.createElement('div');
-    div.classList.add('game-status');
-    div.innerHTML = `${gameWin ? 'WIN!' : 'GAME OVER!'}`;
-    this.DOMGrid.appendChild(div);
+    const parent = this.DOMGrid.parentElement || this.DOMGrid;
+    const winDiv = parent.querySelector('#win');
+    const gameOverDiv = parent.querySelector('#game-over');
+
+    if (gameWin) {
+      if (winDiv) winDiv.classList.remove('hide');
+      if (gameOverDiv) gameOverDiv.classList.add('hide');
+    } else {
+      if (gameOverDiv) gameOverDiv.classList.remove('hide');
+      if (winDiv) winDiv.classList.add('hide');
+    }
   }
 
   createGrid(level) {

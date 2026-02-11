@@ -75,7 +75,7 @@ function gameOver(pacman, grid) {
     cherry.stopRandomMovement();
     cherry.hideCherry(gameBoard);
     isPaused = false;
-    pauseTable.classList.add('hide');
+    pauseTable.classList.add('hide'); 
 
     startButton.classList.remove('hide');
 }
@@ -96,8 +96,15 @@ function checkCollision(pacman, ghosts) {
             collisionGhost.isScared = false;
             score += 100;
         } else {
+            // Remove pacman from its current cell and clear any pacman classes
             gameBoard.removeObject(pacman.position, [OBJECT_TYPE.PACMAN]);
             gameBoard.rotateDiv(pacman.position, 0);
+            for (let i = 0; i < gameBoard.grid.length; i++) {
+                gameBoard.removeObject(i, [OBJECT_TYPE.PACMAN]);
+            }
+            // Stop pacman movement and clear its position
+            pacman.direction = null;
+            pacman.position = null;
             gameOver(pacman, gameGrid);
         }
     }
@@ -233,6 +240,9 @@ function startGame() {
         isPaused = false;
         startButton.classList.add('hide');
         gameBoard.createGrid(LEVEL);
+        // Ensure any previous game-over message is hidden at game start
+        const gameOverDiv = document.getElementById('game-over');
+        if (gameOverDiv) gameOverDiv.classList.add('hide');
 
         pacman = new Pacman(2, 287);
         gameBoard.addObject(287, [OBJECT_TYPE.PACMAN]);
