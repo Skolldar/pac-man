@@ -296,4 +296,14 @@ function startGame() {
 
 // Initialize game
 startButton.addEventListener('click', startGame);
+// Start game with Enter key when start button visible
+document.addEventListener('keydown', (e) => {
+    const isEnter = e.code === 'Enter' || e.key === 'Enter' || e.keyCode === 13;
+    if (!isEnter) return;
+    // Only start if the start button is visible
+    if (!startButton || startButton.classList.contains('hide')) return;
+    e.preventDefault();
+    startGame();
+});
+
 document.addEventListener('keydown', handlePauseKey);
