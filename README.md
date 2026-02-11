@@ -1,6 +1,6 @@
 # Pac-Man Game
 
-A browser-based implementation of the classic Pac-Man game using JavaScript, HTML, and CSS.
+A browser based implementation of the classic Pac-Man game using JavaScript, HTML, and CSS.
 [![Screenshot-from-2026-02-11-12-40-09.png](https://i.postimg.cc/Y9238CFy/Screenshot-from-2026-02-11-12-40-09.png)](https://postimg.cc/1gTw3PJp)
 
 ## Features
