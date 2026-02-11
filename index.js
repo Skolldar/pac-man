@@ -240,9 +240,10 @@ function startGame() {
         isPaused = false;
         startButton.classList.add('hide');
         gameBoard.createGrid(LEVEL);
-        // Ensure any previous game-over message is hidden at game start
         const gameOverDiv = document.getElementById('game-over');
+        const winDiv = document.getElementById('win');
         if (gameOverDiv) gameOverDiv.classList.add('hide');
+        if (winDiv) winDiv.classList.add('hide');
 
         pacman = new Pacman(2, 287);
         gameBoard.addObject(287, [OBJECT_TYPE.PACMAN]);
