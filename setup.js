@@ -1,5 +1,12 @@
 export const GRID_SIZE = 20;
-export const CELL_SIZE = 20;
+export const CELL_SIZE = 30; // Size of each cell in pixels
+
+const GHOST_SIZE = 20; // Size of ghosts
+const DOT_SIZE = 5; // Size of dots
+const PILL_SIZE = 12; // Size of power pills
+const PACMAN_SIZE = 19; // Size of Pacman
+
+export { GHOST_SIZE, DOT_SIZE, PACMAN_SIZE, PILL_SIZE };
 export const DIRECTIONS = {
   ArrowLeft: {
     code: 37,

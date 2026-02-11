@@ -97,6 +97,8 @@ body {
 .square {
   display: block;
   position: relative;
+  width: var(--cell-size);
+  height: var(--cell-size);
 }
 
 .blank {
@@ -109,13 +111,13 @@ body {
 
 .dot {
   background: white;
-  border: 8px solid black;
+  border: calc((var(--cell-size) - var(--dot-size)) / 2) solid black;
   border-radius: 50%;
 }
 
 .pill {
   background: white;
-  border: 5px solid black;
+  border: calc((var(--cell-size) - var(--pill-size)) / 2) solid black;
   border-radius: 50%;
 }
 
@@ -125,6 +127,9 @@ body {
 
 .ghost {
   position: relative;
+  width: var(--ghost-size);
+  height: var(--ghost-size);
+  place-self: center;
   border-radius: 10px 10px 2px 2px;
   border: none;
 }
@@ -184,15 +189,18 @@ body {
 .pacman {
   background: yellow;
   border: none;
+  width: var(--pacman-size);
+  height: var(--pacman-size);
+  place-self: center;
   border-radius: 50%;
   clip-path: polygon(
-    0 0,
-    20px 0,
-    20px -5px,
-    8px 10px,
-    20px 25px,
-    20px 20px,
-    0 20px
+    0% 0%,
+    100% 0%,
+    100% 0%,
+    40% 50%,
+    100% 100%,
+    100% 100%,
+    0% 100%
   );
   animation: chew 0.2s linear forwards infinite;
 }

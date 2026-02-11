@@ -1,4 +1,13 @@
-import { GRID_SIZE, CELL_SIZE, OBJECT_TYPE, CLASS_LIST } from './setup.js';
+import {
+  GRID_SIZE,
+  CELL_SIZE,
+  GHOST_SIZE,
+  DOT_SIZE,
+  PACMAN_SIZE,
+  PILL_SIZE,
+  OBJECT_TYPE,
+  CLASS_LIST
+} from './setup.js';
 
 class GameBoard {
   constructor(DOMGrid) {
@@ -33,12 +42,18 @@ class GameBoard {
     this.dotPositions = new Set();
     this.grid = [];
     this.DOMGrid.innerHTML = '';
-    this.DOMGrid.style.cssText = `grid-template-columns: repeat(${GRID_SIZE}, ${CELL_SIZE}px);`;
+    this.DOMGrid.style.cssText = `
+      grid-template-columns: repeat(${GRID_SIZE}, var(--cell-size));
+      --cell-size: ${CELL_SIZE}px;
+      --ghost-size: ${GHOST_SIZE}px;
+      --dot-size: ${DOT_SIZE}px;
+      --pacman-size: ${PACMAN_SIZE}px;
+      --pill-size: ${PILL_SIZE}px;
+    `;
 
     level.forEach((square) => {
       const div = document.createElement('div');
       div.classList.add('square', CLASS_LIST[square]);
-      div.style.cssText = `width: ${CELL_SIZE}px; height: ${CELL_SIZE}px;`;
       this.DOMGrid.appendChild(div);
       this.grid.push(div);
 
