@@ -8,6 +8,7 @@ class Cherry {
         this.timer = null;
         //Cherry interval for random movement every 20 seconds
         this.movementInterval = 20000;
+        this.movementTimer = null;
     }
 
     showCherry(gameBoard, soundCallback) {
@@ -38,9 +39,7 @@ class Cherry {
         // Play sound when cherry appears
         if (soundCallback) soundCallback();
         // Set a timer to hide the cherry after the visible duration
-        this.timer = setTimeout(() => {
-            this.hideCherry(gameBoard);
-        }, this.visibleDuration);
+        this.restartVisibilityTimer(gameBoard);
     }
 
     hideCherry(gameBoard) {
@@ -57,14 +56,33 @@ class Cherry {
         }
     }
 
+    restartVisibilityTimer(gameBoard) {
+        if (this.timer) {
+            clearTimeout(this.timer);
+        }
+        this.timer = setTimeout(() => {
+            this.hideCherry(gameBoard);
+        }, this.visibleDuration);
+    }
+
     // Method to randomly move the cherry to a new position every 20 seconds
     startRandomMovement(gameBoard, soundCallback) {
-        setInterval(() => {
+        if (this.movementTimer) {
+            clearInterval(this.movementTimer);
+        }
+        this.movementTimer = setInterval(() => {
             if (this.isVisible) {
                 this.hideCherry(gameBoard);
                 this.showCherry(gameBoard, soundCallback);
             }
         }, this.movementInterval);
+    }
+
+    stopRandomMovement() {
+        if (this.movementTimer) {
+            clearInterval(this.movementTimer);
+            this.movementTimer = null;
+        }
     }
 }
 

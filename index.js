@@ -19,6 +19,7 @@ const dangerSound = new Audio("./sounds/danger.mp3");
 //DOM elements
 const gameGrid = document.querySelector('#game');
 const scoreTable = document.querySelector('#score');
+const pauseTable = document.querySelector('#pause');
 const startButton = document.querySelector('#start-button');
 
 //Game constants
@@ -33,8 +34,13 @@ let timer = null;
 let gameWin = false;
 let powerPillActive = false;
 let powerPillEndTime = 0;
+let powerPillRemaining = 0;
 let cherry = new Cherry();
 let cherryInterval = null;
+let isPaused = false;
+let pacman = null;
+let ghosts = [];
+let pacmanKeyHandler = null;
 
 //audio
 function playSound(sound) {
@@ -54,16 +60,22 @@ function gameOver(pacman, grid) {
     playSound(gameWin ? winSound : gameOverSound);
 
     //remove the event listener to prevent further movement
-    document.removeEventListener('keydown', (e) =>
-        pacman.handleKeyInput(e, gameBoard.objectExist.bind(gameBoard))
-    );
+    if (pacmanKeyHandler) {
+        document.removeEventListener('keydown', pacmanKeyHandler);
+        pacmanKeyHandler = null;
+    }
 
     gameBoard.showGameStatus(gameWin);
 
     //stop the game loop
     clearInterval(timer);
+    timer = null;
     if (cherryInterval) clearInterval(cherryInterval);
+    cherryInterval = null;
+    cherry.stopRandomMovement();
     cherry.hideCherry(gameBoard);
+    isPaused = false;
+    pauseTable.classList.add('hide');
 
     startButton.classList.remove('hide');
 }
@@ -157,23 +169,83 @@ function gameLoop(pacman, ghosts) {
 
 }
 
+function setPausedState(paused) {
+    if (paused === isPaused) return;
+    isPaused = paused;
+
+    if (isPaused) {
+        if (timer) {
+            clearInterval(timer);
+            timer = null;
+        }
+        if (powerPillActive) {
+            powerPillRemaining = Math.max(0, powerPillEndTime - Date.now());
+        }
+        if (cherryInterval) {
+            clearInterval(cherryInterval);
+            cherryInterval = null;
+        }
+        if (cherry.timer) {
+            clearTimeout(cherry.timer);
+            cherry.timer = null;
+        }
+        cherry.stopRandomMovement();
+        pauseTable.classList.remove('hide');
+        return;
+    }
+
+    if (powerPillActive) {
+        powerPillEndTime = Date.now() + powerPillRemaining;
+    } else {
+        powerPillRemaining = 0;
+    }
+
+    if (pacman && ghosts.length && !gameWin) {
+        timer = setInterval(() => gameLoop(pacman, ghosts), GLOBAL_SPEED);
+    }
+    cherryInterval = setInterval(() => {
+        cherry.showCherry(gameBoard, () => playSound(itemSound));
+    }, 20000);
+    cherry.startRandomMovement(gameBoard, () => playSound(itemSound));
+    if (cherry.isVisible) {
+        cherry.restartVisibilityTimer(gameBoard);
+    }
+    pauseTable.classList.add('hide');
+}
+
+function handlePauseKey(e) {
+    const isSpace = e.code === 'Space' || e.key === ' ' || e.keyCode === 32;
+    if (!isSpace) return;
+    if (!pacman || gameWin) return;
+    e.preventDefault();
+    setPausedState(!isPaused);
+}
+
 function startGame() {
         playSound(gameStartSound);
         gameWin = false;
         powerPillActive = false;
+        powerPillRemaining = 0;
         score = 0;
         // Show score as 0 at the start
         scoreTable.textContent = 'Score: 0';
+        pauseTable.classList.add('hide');
+        isPaused = false;
         startButton.classList.add('hide');
         gameBoard.createGrid(LEVEL);
 
-        const pacman = new Pacman(2, 287);
+        pacman = new Pacman(2, 287);
         gameBoard.addObject(287, [OBJECT_TYPE.PACMAN]);
-        document.addEventListener('keydown', (e) =>
-            pacman.handleKeyInput(e, gameBoard.objectExist.bind(gameBoard))
-        );
+        if (pacmanKeyHandler) {
+            document.removeEventListener('keydown', pacmanKeyHandler);
+        }
+        pacmanKeyHandler = (e) => {
+            if (isPaused) return;
+            pacman.handleKeyInput(e, gameBoard.objectExist.bind(gameBoard));
+        };
+        document.addEventListener('keydown', pacmanKeyHandler);
 
-        const ghosts = [
+        ghosts = [
             new Ghost(5, 188, randomMove, OBJECT_TYPE.BLINKY),
             new Ghost(4, 209, randomMove, OBJECT_TYPE.PINKY),
             new Ghost(3, 230, randomMove, OBJECT_TYPE.INKY),
@@ -200,6 +272,8 @@ function startGame() {
         });
         
         // Cherry appearance interval
+        cherry.stopRandomMovement();
+        if (cherryInterval) clearInterval(cherryInterval);
         cherryInterval = setInterval(() => {
             cherry.showCherry(gameBoard, () => playSound(itemSound));
         }, 20000);
@@ -212,3 +286,4 @@ function startGame() {
 
 // Initialize game
 startButton.addEventListener('click', startGame);
+document.addEventListener('keydown', handlePauseKey);
