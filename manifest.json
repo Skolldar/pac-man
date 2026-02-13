@@ -1,0 +1,35 @@
+{
+  "name": "Pac-Man Game",
+  "short_name": "Pac-Man",
+  "description": "A fun Pac-Man game playable on desktop and mobile",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "fullscreen",
+  "orientation": "portrait-primary",
+  "theme_color": "#000000",
+  "background_color": "#000000",
+  "icons": [
+    {
+      "src": "./img/pinkGhost.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["games"],
+  "shortcuts": [
+    {
+      "name": "Play Pac-Man",
+      "short_name": "Play",
+      "description": "Start playing Pac-Man",
+      "url": "./index.html",
+      "icons": [
+        {
+          "src": "./img/pinkGhost.png",
+          "sizes": "any",
+          "type": "image/png"
+        }
+      ]
+    }
+  ]
+}

@@ -2,14 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Pac-Man">
+    <meta name="theme-color" content="#000000">
     <link rel="icon" type="image/png" href="./img/pinkGhost.png">
+    <link rel="manifest" href="manifest.json">
     <link rel="stylesheet" href="pacman.css">
     <title>Pac-man</title>
 </head>
 <body>
-    <div class="game-container" style="max-width: 100%; margin: 0 auto;">
-        <div style="display: flex; justify-content: space-between; gap: 10px;">
+    <div class="game-container">
+        <div class="score-time-container">
             <div id="score" class="score">Score: <span id="score-value">0</span></div>
             <div id="time" class="time">Time: <span id="time-value">0</span></div>
         </div>
@@ -20,9 +25,27 @@
             <div id="game-over" class="score game-over hide">GAME OVER</div>
             <div id="win" class="score game-winner hide">WINNER!</div>
         </div>
+        
         <button id="start-button" class="start-button">Start Game</button>
+        
+        <div id="touch-controls" class="touch-controls hide">
+            <div class="dpad">
+                <button id="btn-up" class="dpad-btn dpad-up" aria-label="Up">▲</button>
+                <div class="dpad-row">
+                    <button id="btn-left" class="dpad-btn dpad-left" aria-label="Left">◀</button>
+                    <div class="dpad-empty"></div>
+                    <button id="btn-right" class="dpad-btn dpad-right" aria-label="Right">▶</button>
+                </div>
+                <button id="btn-down" class="dpad-btn dpad-down" aria-label="Down">▼</button>
+            </div>
+        </div>
     </div>
     <script type="module" src="index.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js').catch(err => console.log('SW registration failed:', err));
+        }
+    </script>
 </body>
 
 </html>

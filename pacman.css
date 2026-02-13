@@ -351,7 +351,7 @@ body {
 
   .score, .time {
     width: 120px;
-    height: 35px;
+    height: 30px;
     border: 2px darkblue solid;
     margin: 10px 0;
     font-size: 1rem;
@@ -401,5 +401,126 @@ body {
     right: 2px;
     top: 3px;
     border: 1px solid white;
+  }
+}
+
+.score-time-container {
+  display: flex;
+  justify-content: space-around;
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .score-time-container {
+    gap: 8px;
+    padding: 0 4px;
+  }
+}
+
+.touch-controls {
+  display: none;
+  margin-top: 20px;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.8);
+  border: 2px solid darkblue;
+  border-radius: 10px;
+}
+
+.dpad {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.dpad-row {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  justify-content: center;
+}
+
+.dpad-empty {
+  width: 50px;
+  height: 50px;
+}
+
+.dpad-btn {
+  width: 50px;
+  height: 50px;
+  border: 2px solid white;
+  background: darkblue;
+  color: white;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: none;
+  -ms-touch-action: none;
+  active: 0.7;
+  flex-shrink: 0;
+}
+
+.dpad-btn:active {
+  opacity: 0.7;
+  background: cyan;
+  box-shadow: 0 0 10px cyan;
+}
+
+.dpad-btn:hover {
+  opacity: 0.9;
+  box-shadow: 0 0 10px darkblue;
+}
+
+.dpad-up {
+  margin-bottom: 0;
+}
+
+.dpad-left {
+  margin-right: 0;
+}
+
+.dpad-right {
+  margin-left: 0;
+}
+
+.dpad-down {
+  margin-top: 0;
+}
+
+@media (max-width: 768px) {
+  .touch-controls:not(.hide) {
+    display: flex;
+  }
+
+  .dpad-btn {
+    width: 45px;
+    height: 45px;
+    font-size: 1rem;
+  }
+
+  .dpad-empty {
+    width: 50px;
+    height: 50px;
+  }
+}
+
+@media (max-width: 480px) {
+  .touch-controls {
+    margin-top: 5rem;
+    padding: 8px;
+  }
+
+  .dpad-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 0.9rem;
+  }
+
+  .dpad-empty {
+    width: 40px;
+    height: 40px;
   }
 }

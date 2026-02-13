@@ -5,6 +5,7 @@ import GameBoard from "./GameBoard.js";
 import Pacman from "./Pacman.js";
 import Ghost from "./Ghost.js";
 import Cherry from "./Cherry.js";
+import TouchControls from "./touchControls.js";
 
 const munchSound = new Audio("./sounds/munch.wav");
 const powerPillSound = new Audio("./sounds/pill.wav");
@@ -21,6 +22,7 @@ const gameGrid = document.querySelector('#game');
 const scoreTable = document.querySelector('#score');
 const pauseTable = document.querySelector('#pause');
 const startButton = document.querySelector('#start-button');
+const touchControlsContainer = document.getElementById('touch-controls');
 
 //Game constants
 const POWER_PILL_DURATION = 10000;
@@ -41,6 +43,18 @@ let isPaused = false;
 let pacman = null;
 let ghosts = [];
 let pacmanKeyHandler = null;
+let touchControls = null;
+
+// Prevent default scrolling/pinch gestures on mobile
+document.addEventListener('touchmove', (e) => {
+  if (e.target === gameGrid || touchControlsContainer.contains(e.target)) {
+    e.preventDefault();
+  }
+}, { passive: false });
+
+document.addEventListener('gesturestart', (e) => {
+  e.preventDefault();
+});
 
 //audio
 function playSound(sound) {
@@ -65,6 +79,11 @@ function gameOver(pacman, grid) {
         pacmanKeyHandler = null;
     }
 
+    // Disable touch controls
+    if (touchControls) {
+        touchControls.disable();
+    }
+
     gameBoard.showGameStatus(gameWin);
 
     //stop the game loop
@@ -75,7 +94,10 @@ function gameOver(pacman, grid) {
     cherry.stopRandomMovement();
     cherry.hideCherry(gameBoard);
     isPaused = false;
-    pauseTable.classList.add('hide'); 
+    pauseTable.classList.add('hide');
+    startButton.classList.remove('hide');
+    touchControlsContainer.classList.add('hide');
+
 
     startButton.classList.remove('hide');
 }
@@ -239,6 +261,13 @@ function startGame() {
         pauseTable.classList.add('hide');
         isPaused = false;
         startButton.classList.add('hide');
+        // Show touch controls on mobile devices and when start button is hidden
+        if (window.innerWidth <= 768) {
+            touchControlsContainer.classList.remove('hide');
+        } else {
+            touchControlsContainer.classList.add('hide');
+        }
+
         gameBoard.createGrid(LEVEL);
         const gameOverDiv = document.getElementById('game-over');
         const winDiv = document.getElementById('win');
@@ -255,6 +284,15 @@ function startGame() {
             pacman.handleKeyInput(e, gameBoard.objectExist.bind(gameBoard));
         };
         document.addEventListener('keydown', pacmanKeyHandler);
+
+        // Initialize touch controls for mobile
+        if (!touchControls) {
+            touchControls = new TouchControls(pacman, gameBoard.objectExist.bind(gameBoard));
+        } else {
+            touchControls.pacman = pacman;
+            touchControls.objectExists = gameBoard.objectExist.bind(gameBoard);
+        }
+        touchControls.enable();
 
         ghosts = [
             new Ghost(5, 188, randomMove, OBJECT_TYPE.BLINKY),
