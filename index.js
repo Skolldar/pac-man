@@ -95,11 +95,11 @@ function gameOver(pacman, grid) {
     cherry.hideCherry(gameBoard);
     isPaused = false;
     pauseTable.classList.add('hide');
-    startButton.classList.remove('hide');
+    startButton.classList.remove('preserve-space');
     touchControlsContainer.classList.add('hide');
 
 
-    startButton.classList.remove('hide');
+    startButton.classList.remove('preserve-space');
 }
 
 //check collision function
@@ -260,7 +260,7 @@ function startGame() {
         scoreTable.textContent = 'Score: 0';
         pauseTable.classList.add('hide');
         isPaused = false;
-        startButton.classList.add('hide');
+        startButton.classList.add('preserve-space');
         // Show touch controls on mobile devices and when start button is hidden
         if (window.innerWidth <= 768) {
             touchControlsContainer.classList.remove('hide');
@@ -340,7 +340,7 @@ document.addEventListener('keydown', (e) => {
     const isEnter = e.code === 'Enter' || e.key === 'Enter' || e.keyCode === 13;
     if (!isEnter) return;
     // Only start if the start button is visible
-    if (!startButton || startButton.classList.contains('hide')) return;
+    if (!startButton || startButton.classList.contains('preserve-space')) return;
     e.preventDefault();
     startGame();
 });

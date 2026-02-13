@@ -137,6 +137,10 @@ body {
   display: none;
 }
 
+.preserve-space {
+  visibility: hidden;
+}
+
 .square {
   display: block;
   position: relative;
@@ -419,7 +423,6 @@ body {
 
 .touch-controls {
   display: none;
-  margin-top: 20px;
   padding: 10px;
   background: rgba(0, 0, 0, 0.8);
   border: 2px solid darkblue;
@@ -509,7 +512,6 @@ body {
 
 @media (max-width: 480px) {
   .touch-controls {
-    margin-top: 5rem;
     padding: 8px;
   }
 
