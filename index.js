@@ -45,7 +45,7 @@ let ghosts = [];
 let pacmanKeyHandler = null;
 let touchControls = null;
 
-// Prevent default scrolling/pinch gestures on mobile
+// Prevent default scrolling
 document.addEventListener('touchmove', (e) => {
   if (e.target === gameGrid || touchControlsContainer.contains(e.target)) {
     e.preventDefault();
@@ -364,10 +364,12 @@ function updateSoundIcons() {
         soundToggleButton.setAttribute('aria-pressed', 'true');
         if (onIcon) onIcon.classList.add('icon-hidden');
         if (offIcon) offIcon.classList.remove('icon-hidden');
+        soundToggleButton.classList.add('muted');
     } else {
         soundToggleButton.setAttribute('aria-pressed', 'false');
         if (onIcon) onIcon.classList.remove('icon-hidden');
         if (offIcon) offIcon.classList.add('icon-hidden');
+        soundToggleButton.classList.remove('muted');
     }
 }
 
@@ -404,10 +406,12 @@ function updatePauseIcons() {
         pauseBtn.setAttribute('aria-pressed', 'true');
         if (pauseIcon) pauseIcon.classList.add('icon-hidden');
         if (playIcon) playIcon.classList.remove('icon-hidden');
+        pauseBtn.classList.add('paused');
     } else {
         pauseBtn.setAttribute('aria-pressed', 'false');
         if (pauseIcon) pauseIcon.classList.remove('icon-hidden');
         if (playIcon) playIcon.classList.add('icon-hidden');
+        pauseBtn.classList.remove('paused');
     }
 }
 

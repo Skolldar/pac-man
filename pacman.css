@@ -28,7 +28,7 @@ body {
   width: 100%;
   max-width: var(--board-size);
   margin: 0 auto;
-  padding: 8px;
+  padding: 0;
 }
 
 .game-board {
@@ -274,6 +274,15 @@ body {
     --dot-size: 6px;
     --pacman-size: 16px;
     --pill-size: 10px;
+  }
+
+  body {
+    align-items: flex-start;
+  }
+
+  .game-container {
+    padding: 8px;
+    box-sizing: border-box;
   }
 
   .game-status {
@@ -548,6 +557,12 @@ body {
   box-shadow: 0 0 5px yellow;
   color: darkblue;
 }
+
+.pause-button.paused {
+  background: yellow;
+  box-shadow: 0 0 5px yellow;
+  color: darkblue;
+}
 .sound-button {
   padding: 5px 10px;
   border: 2px solid white;
@@ -562,7 +577,12 @@ body {
   box-shadow: 0 0 10px red;
 }
 
-/* Sound icon sizing and visibility */
+.sound-button.muted {
+  background: red;
+  box-shadow: 0 0 10px red;
+  color: white;
+}
+
 .sound-button svg {
   width: 20px;
   height: 20px;
@@ -573,7 +593,6 @@ body {
   display: none;
 }
 
-/* Pause / Play icon sizing */
 .pause-button svg {
   width: 20px;
   height: 20px;
