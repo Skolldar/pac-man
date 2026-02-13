@@ -545,7 +545,7 @@ body {
 
 .pause-button {
   padding: 5px 10px;
-  border: 2px solid darkblue;
+  border: 2px solid white;
   background: darkblue;
   color: white;
   font-size: 1rem;
@@ -561,6 +561,7 @@ body {
 .pause-button.paused {
   background: yellow;
   box-shadow: 0 0 5px yellow;
+  border-color: darkblue;
   color: darkblue;
 }
 .sound-button {
