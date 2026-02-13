@@ -13,7 +13,34 @@
     <title>Pac-man</title>
 </head>
 <body>
-    <div class="game-container">
+
+    <div class="game-container">      
+             <div class="top-controls">
+            <button id="pause-button" class="pause-button" aria-pressed="false" aria-label="Pause or resume">
+                <!-- Pause icon -->
+                <svg class="icon-pause" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <rect x="6" y="5" width="4" height="14"/>
+                    <rect x="14" y="5" width="4" height="14"/>
+                </svg>
+                <!-- Play icon -->
+                <svg class="icon-play icon-hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M6 4l15 8-15 8z"/>
+                </svg>
+            </button>
+             <button id="sound-toggle" class="sound-button" aria-pressed="false" aria-label="Toggle sound">
+                <!-- Sound ON icon -->
+                <svg class="icon-sound-on" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M3 10v4h4l5 5V5L7 10H3z"/>
+                    <path d="M14.5 9.5a3.5 3.5 0 010 5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M16.5 7.5a6 6 0 010 9" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <!-- Sound OFF icon -->
+                <svg class="icon-sound-off icon-hidden" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M3 10v4h4l5 5V5L7 10H3z"/>
+                    <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+             </button>
+         </div>  
         <div class="score-time-container">
             <div id="score" class="score">Score: <span id="score-value">0</span></div>
             <div id="time" class="time">Time: <span id="time-value">0</span></div>

@@ -526,3 +526,67 @@ body {
     height: 40px;
   }
 }
+
+.top-controls {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.pause-button {
+  padding: 5px 10px;
+  border: 2px solid darkblue;
+  background: darkblue;
+  color: white;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.pause-button:hover {
+  background: yellow;
+  box-shadow: 0 0 5px yellow;
+  color: darkblue;
+}
+.sound-button {
+  padding: 5px 10px;
+  border: 2px solid white;
+  background: darkblue;
+  color: white;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.sound-button:hover {
+  background: red;
+  box-shadow: 0 0 10px red;
+}
+
+/* Sound icon sizing and visibility */
+.sound-button svg {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  fill: currentColor;
+}
+.icon-hidden {
+  display: none;
+}
+
+/* Pause / Play icon sizing */
+.pause-button svg {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  fill: currentColor;
+}
+
+@media (max-width: 480px) {
+  .sound-button svg {
+    width: 22px;
+    height: 22px;
+  }
+  .pause-button {
+    padding: 6px 12px;
+  }
+}

@@ -62,10 +62,12 @@ function playSound(sound) {
     if (sound instanceof HTMLAudioElement) {
         const soundEffect = sound.cloneNode(true);
         soundEffect.currentTime = 0;
+        try { soundEffect.muted = isMuted; } catch (e) { console.log('Error setting muted property:', e); }
         soundEffect.play();
         return;
     }
     const soundEffect = new Audio(sound);
+    try { soundEffect.muted = isMuted; } catch (e) {console.log('Error setting muted property:', e); }
     soundEffect.play();
 }
 
@@ -251,7 +253,7 @@ function handlePauseKey(e) {
 }
 
 function startGame() {
-        playSound(gameStartSound);
+    playSound(gameStartSound);
         gameWin = false;
         powerPillActive = false;
         powerPillRemaining = 0;
@@ -260,6 +262,7 @@ function startGame() {
         scoreTable.textContent = 'Score: 0';
         pauseTable.classList.add('hide');
         isPaused = false;
+        if (typeof updatePauseIcons === 'function') updatePauseIcons();
         startButton.classList.add('preserve-space');
         // Show touch controls on mobile devices and when start button is hidden
         if (window.innerWidth <= 768) {
@@ -346,3 +349,67 @@ document.addEventListener('keydown', (e) => {
 });
 
 document.addEventListener('keydown', handlePauseKey);
+
+// --- Sound toggle (mute/unmute) and pause button click handlers ---
+const soundToggleButton = document.getElementById('sound-toggle');
+const pauseBtn = document.getElementById('pause-button');
+
+let isMuted = false;
+
+function updateSoundIcons() {
+    if (!soundToggleButton) return;
+    const onIcon = soundToggleButton.querySelector('.icon-sound-on');
+    const offIcon = soundToggleButton.querySelector('.icon-sound-off');
+    if (isMuted) {
+        soundToggleButton.setAttribute('aria-pressed', 'true');
+        if (onIcon) onIcon.classList.add('icon-hidden');
+        if (offIcon) offIcon.classList.remove('icon-hidden');
+    } else {
+        soundToggleButton.setAttribute('aria-pressed', 'false');
+        if (onIcon) onIcon.classList.remove('icon-hidden');
+        if (offIcon) offIcon.classList.add('icon-hidden');
+    }
+}
+
+function setAllAudioMuted(muted) {
+    [munchSound, powerPillSound, eatGhostSound, gameOverSound, winSound, cherrySound, itemSound, gameStartSound, dangerSound].forEach((a) => {
+        try {
+            if (a) a.muted = muted;
+        } catch (e) {}
+    });
+}
+
+if (soundToggleButton) {
+    soundToggleButton.addEventListener('click', () => {
+        isMuted = !isMuted;
+        setAllAudioMuted(isMuted);
+        updateSoundIcons();
+    });
+    // initialize icons
+    updateSoundIcons();
+}
+
+if (pauseBtn) {
+    pauseBtn.addEventListener('click', () => {
+        setPausedState(!isPaused);
+        if (typeof updatePauseIcons === 'function') updatePauseIcons();
+    });
+}
+
+function updatePauseIcons() {
+    if (!pauseBtn) return;
+    const pauseIcon = pauseBtn.querySelector('.icon-pause');
+    const playIcon = pauseBtn.querySelector('.icon-play');
+    if (isPaused) {
+        pauseBtn.setAttribute('aria-pressed', 'true');
+        if (pauseIcon) pauseIcon.classList.add('icon-hidden');
+        if (playIcon) playIcon.classList.remove('icon-hidden');
+    } else {
+        pauseBtn.setAttribute('aria-pressed', 'false');
+        if (pauseIcon) pauseIcon.classList.remove('icon-hidden');
+        if (playIcon) playIcon.classList.add('icon-hidden');
+    }
+}
+
+// initialize pause icons on load
+if (typeof updatePauseIcons === 'function') updatePauseIcons();
