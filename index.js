@@ -33,6 +33,13 @@ const gameBoard = GameBoard.createGameBoard(gameGrid, LEVEL); //create the game 
 //initial game state
 let score = 0;
 let timer = null;
+// Time tracking
+const timeValue = document.getElementById('time-value');
+let timeInterval = null;
+let elapsedTime = 0;
+let lastTimeStart = 0;
+let timeStoppedPermanently = false;
+
 let gameWin = false;
 let powerPillActive = false;
 let powerPillEndTime = 0;
@@ -91,6 +98,20 @@ function gameOver(pacman, grid) {
     //stop the game loop
     clearInterval(timer);
     timer = null;
+    // stop the game time permanently on win/lose
+    if (!timeStoppedPermanently) {
+        // finalize elapsed time
+        if (lastTimeStart) {
+            elapsedTime += Date.now() - lastTimeStart;
+            lastTimeStart = 0;
+        }
+        timeStoppedPermanently = true;
+    }
+    if (timeInterval) {
+        clearInterval(timeInterval);
+        timeInterval = null;
+    }
+    updateTimeDisplay();
     if (cherryInterval) clearInterval(cherryInterval);
     cherryInterval = null;
     cherry.stopRandomMovement();
@@ -103,6 +124,35 @@ function gameOver(pacman, grid) {
 
     startButton.classList.remove('preserve-space');
 }
+
+// Time display helpers
+function updateTimeDisplay() {
+    if (!timeValue) return;
+    let current = elapsedTime;
+    if (lastTimeStart) current += Date.now() - lastTimeStart;
+    timeValue.textContent = Math.floor(current / 1000);
+}
+
+function startTime() {
+    if (timeStoppedPermanently) return;
+    lastTimeStart = Date.now();
+    if (timeInterval) clearInterval(timeInterval);
+    timeInterval = setInterval(updateTimeDisplay, 250);
+    updateTimeDisplay();
+}
+
+function pauseTime() {
+    if (lastTimeStart) {
+        elapsedTime += Date.now() - lastTimeStart;
+        lastTimeStart = 0;
+    }
+    if (timeInterval) {
+        clearInterval(timeInterval);
+        timeInterval = null;
+    }
+    updateTimeDisplay();
+}
+
 
 //check collision function
 function checkCollision(pacman, ghosts) {
@@ -221,6 +271,7 @@ function setPausedState(paused) {
             cherry.timer = null;
         }
         cherry.stopRandomMovement();
+        pauseTime();
         pauseTable.classList.remove('hide');
         return;
     }
@@ -234,6 +285,7 @@ function setPausedState(paused) {
     if (pacman && ghosts.length && !gameWin) {
         timer = setInterval(() => gameLoop(pacman, ghosts), GLOBAL_SPEED);
     }
+    startTime();
     cherryInterval = setInterval(() => {
         cherry.showCherry(gameBoard, () => playSound(itemSound));
     }, 20000);
@@ -264,6 +316,10 @@ function startGame() {
         isPaused = false;
         if (typeof updatePauseIcons === 'function') updatePauseIcons();
         startButton.classList.add('preserve-space');
+        // reset time tracking
+        elapsedTime = 0;
+        lastTimeStart = 0;
+        timeStoppedPermanently = false;
         // Show touch controls on mobile devices and when start button is hidden
         if (window.innerWidth <= 768) {
             touchControlsContainer.classList.remove('hide');
@@ -334,6 +390,7 @@ function startGame() {
 
         // Gameloop
         timer = setInterval(() => gameLoop(pacman, ghosts), GLOBAL_SPEED);
+        startTime();
 }
 
 // Initialize game
