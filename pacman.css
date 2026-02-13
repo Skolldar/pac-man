@@ -2,12 +2,20 @@
   box-sizing: border-box;
 }
 
+:root{
+  --cell-size: 30px;
+  --ghost-size: 24px;
+  --dot-size: 6px;
+  --pacman-size: 24px;
+  --pill-size: 15px;
+}
+
 body {
   background-color: black;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  min-height: 100vh;
   margin: 0;
 }
 
@@ -17,6 +25,10 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  max-width: var(--board-size);
+  margin: 0 auto;
+  padding: 8px;
 }
 
 .game-board {
@@ -28,6 +40,7 @@ body {
   position: relative;
   display: inline-grid;
   background: black;
+  grid-auto-rows: var(--cell-size);
 }
 
 .game-status {
@@ -46,10 +59,10 @@ body {
   font-size: 1.5rem;
 }
 
-.score {
+.score, .time {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-around;
   width: 200px;
   height: 50px;
   border: 5px darkblue solid;
@@ -57,7 +70,7 @@ body {
   margin: 20px 0;
   color: white;
   font-family: Arial, Helvetica, sans-serif;
-  font-size: 2rem;
+  font-size: 1.5rem;
 }
 
 /* Base styles for game overlay messages */
@@ -108,7 +121,7 @@ body {
   height: 50px;
   border: 5px darkblue solid;
   background: black;
-  margin-top: 20px;
+  margin-top: 100px;
   color: white;
   font-family: Arial, Helvetica, sans-serif;
   font-size: 1.5rem;
@@ -246,5 +259,147 @@ body {
       20px 20px,
       0 20px
     );
+  }
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  :root {
+    --cell-size: 20px;
+    --ghost-size: 16px;
+    --dot-size: 6px;
+    --pacman-size: 16px;
+    --pill-size: 10px;
+  }
+
+  .game-status {
+    height: 40px;
+    border: 3px darkblue solid;
+    font-size: 1rem;
+  }
+
+  .score, .time {
+    width: 150px;
+    height: 40px;
+    border: 3px darkblue solid;
+    margin: 15px 0;
+    font-size: 1.2rem;
+  }
+
+  .game-over,
+  .game-winner,
+  .pause {
+    height: 40px;
+    border: 2px solid;
+    box-shadow: 0 0 0 3px;
+    font-size: 1.2rem;
+  }
+
+  .start-button {
+    width: 150px;
+    height: 40px;
+    border: 3px darkblue solid;
+    margin-top: 100px;
+    font-size: 1.2rem;
+  }
+
+  @keyframes chew {
+    50% {
+      clip-path: polygon(
+        0 0,
+        23px 0,
+        21px 5px,
+        5px 8px,
+        15px 5px,
+        21px 23px,
+        0 23px
+      );
+    }
+  }
+
+  .ghost::before {
+    width: 4px;
+    height: 4px;
+    left: 3px;
+    top: 4px;
+    border: 1.5px solid white;
+  }
+  .ghost::after {
+    width: 4px;
+    height: 4px;
+    right: 3px;
+    top: 4px;
+    border: 1.5px solid white;
+  }
+}
+
+/* Extra Small Mobile Styles */
+@media (max-width: 480px) {
+  :root {
+    --cell-size: 15px;
+    --ghost-size: 12px;
+    --dot-size: 4px;
+    --pacman-size: 12px;
+    --pill-size: 7px;
+  }
+
+  .game-status {
+    height: 35px;
+    border: 2px darkblue solid;
+    font-size: 0.875rem;
+  }
+
+  .score, .time {
+    width: 120px;
+    height: 35px;
+    border: 2px darkblue solid;
+    margin: 10px 0;
+    font-size: 1rem;
+  }
+
+  .game-over,
+  .game-winner,
+  .pause {
+    height: 35px;
+    border: 2px solid;
+    box-shadow: 0 0 0 2px;
+    font-size: 1rem;
+  }
+
+  .start-button {
+    width: 120px;
+    height: 35px;
+    border: 2px darkblue solid;
+    margin-top: 5rem;
+    font-size: 1rem;
+  }
+
+  @keyframes chew {
+    50% {
+      clip-path: polygon(
+        0 0,
+        23px 0,
+        23px 8px,
+        3px 6px,
+        15px 5px,
+        21px 23px,
+        0 23px
+      );
+    }
+  }
+
+  .ghost::before {
+    width: 3px;
+    height: 3px;
+    left: 2px;
+    top: 3px;
+    border: 1px solid white;
+  }
+  .ghost::after {
+    width: 3px;
+    height: 3px;
+    right: 2px;
+    top: 3px;
+    border: 1px solid white;
   }
 }

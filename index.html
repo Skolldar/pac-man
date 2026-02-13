@@ -8,8 +8,12 @@
     <title>Pac-man</title>
 </head>
 <body>
-    <div class="game-container">
-        <div id="score" class="score">Score: <span id="score-value"> 0</span></div>
+    <div class="game-container" style="max-width: 100%; margin: 0 auto;">
+        <div style="display: flex; justify-content: space-between; gap: 10px;">
+            <div id="score" class="score">Score: <span id="score-value">0</span></div>
+            <div id="time" class="time">Time: <span id="time-value">0</span></div>
+        </div>
+
         <div class="game-board">
             <div id="game"></div>
             <div id="pause" class="score pause hide">PAUSED</div>

@@ -1,13 +1,25 @@
 import {
   GRID_SIZE,
   CELL_SIZE,
-  GHOST_SIZE,
-  DOT_SIZE,
-  PACMAN_SIZE,
-  PILL_SIZE,
   OBJECT_TYPE,
   CLASS_LIST
 } from './setup.js';
+
+const MIN_CELL_SIZE = 8;
+const MAX_CELL_SIZE = 25;
+const GHOST_SCALE = 0.8;
+const DOT_SCALE = 0.2;
+const PACMAN_SCALE = 0.7;
+const PILL_SCALE = 0.5;
+const RESIZE_DEBOUNCE_MS = 120;
+
+const debounce = (fn, wait = 100) => {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn(...args), wait);
+  };
+};
 
 class GameBoard {
   constructor(DOMGrid) {
@@ -15,6 +27,9 @@ class GameBoard {
     this.dotPositions = new Set();
     this.grid = [];
     this.DOMGrid = DOMGrid;
+    this.onResize = debounce(() => this.updateBoardScale(), RESIZE_DEBOUNCE_MS);
+    window.addEventListener('resize', this.onResize);
+    window.addEventListener('orientationchange', this.onResize);
   }
 
   static getNextPositionWithPortal(position, direction) {
@@ -27,6 +42,43 @@ class GameBoard {
     }
 
     return nextMovePosition;
+  }
+
+  updateBoardScale() {
+    const container = this.DOMGrid.closest('.game-container') || document.body;
+    const scoreEl = document.getElementById('score');
+    const startButton = document.getElementById('start-button');
+    const verticalUI =
+      (scoreEl ? scoreEl.offsetHeight : 0) +
+      (startButton ? startButton.offsetHeight : 0) +
+      40;
+
+    const availableWidth = Math.max(0, container.clientWidth - 16);
+    const availableHeight = Math.max(0, window.innerHeight - verticalUI);
+    const maxBoardSize = Math.min(availableWidth, availableHeight);
+
+    let cellSize = Math.floor(maxBoardSize / GRID_SIZE);
+    if (!Number.isFinite(cellSize) || cellSize <= 0) {
+      cellSize = CELL_SIZE;
+    }
+
+    cellSize = Math.max(MIN_CELL_SIZE, Math.min(MAX_CELL_SIZE, cellSize));
+
+    const ghostSize = Math.max(1, Math.round(cellSize * GHOST_SCALE));
+    const dotSize = Math.max(1, Math.round(cellSize * DOT_SCALE));
+    const pacmanSize = Math.max(1, Math.round(cellSize * PACMAN_SCALE));
+    const pillSize = Math.max(1, Math.round(cellSize * PILL_SCALE));
+
+    this.DOMGrid.style.setProperty('--cell-size', `${cellSize}px`);
+    this.DOMGrid.style.setProperty('--ghost-size', `${ghostSize}px`);
+    this.DOMGrid.style.setProperty('--dot-size', `${dotSize}px`);
+    this.DOMGrid.style.setProperty('--pacman-size', `${pacmanSize}px`);
+    this.DOMGrid.style.setProperty('--pill-size', `${pillSize}px`);
+
+    this.DOMGrid.style.gridTemplateColumns = `repeat(${GRID_SIZE}, var(--cell-size))`;
+    this.DOMGrid.style.gridAutoRows = 'var(--cell-size)';
+    this.DOMGrid.style.width = `${cellSize * GRID_SIZE}px`;
+    this.DOMGrid.style.height = `${cellSize * GRID_SIZE}px`;
   }
 
   showGameStatus(gameWin) {
@@ -50,11 +102,12 @@ class GameBoard {
     this.DOMGrid.innerHTML = '';
     this.DOMGrid.style.cssText = `
       grid-template-columns: repeat(${GRID_SIZE}, var(--cell-size));
+      grid-auto-rows: var(--cell-size);
       --cell-size: ${CELL_SIZE}px;
-      --ghost-size: ${GHOST_SIZE}px;
-      --dot-size: ${DOT_SIZE}px;
-      --pacman-size: ${PACMAN_SIZE}px;
-      --pill-size: ${PILL_SIZE}px;
+      --ghost-size: ${Math.round(CELL_SIZE * GHOST_SCALE)}px;
+      --dot-size: ${Math.round(CELL_SIZE * DOT_SCALE)}px;
+      --pacman-size: ${Math.round(CELL_SIZE * PACMAN_SCALE)}px;
+      --pill-size: ${Math.round(CELL_SIZE * PILL_SCALE)}px;
     `;
 
     level.forEach((square) => {
@@ -73,6 +126,8 @@ class GameBoard {
         this.dotCount++;
       }
     });
+
+    this.updateBoardScale();
   }
 
   addObject(position, classes) {
